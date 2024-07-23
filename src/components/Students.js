@@ -45,6 +45,10 @@ function Students() {
     if (localStorage.getItem("list")){
       setList(JSON.parse(localStorage.getItem("list")))
     }
+    else 
+    {
+      localStorage.setItem("list",JSON.stringify(List))
+    }
   },[])
   const deleteById=(id)=>{
     let newList=(List.filter(item=>item.id!==id))
