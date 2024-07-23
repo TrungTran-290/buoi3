@@ -1,0 +1,53 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.item-content {
+  text-align: left;
+}
+.item-content.active {
+  text-decoration: line-through;
+}
+.student-list {
+  justify-content: space-between;
+  border-color: aqua;
+}
+button {
+  border: none;
+  border-radius: 4px;
+  background-color: #dc3041;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+button i {
+  padding: 10px;
+
+  color: #fff;
+}
+h1 {
+  text-align: center;
+}
+.dips {
+  display: flex;
+}
+p {
+  margin-left: 10px;
+  transform: translateY(25%);
+}
+.Theapp{
+    height: 100vh;
+    position: relative;
+}
+.footer {
+  z-index: 1000;
+  padding: 10px;
+  margin: 0;
+  bottom: 0;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  background-color: #555555;
+  backdrop-filter: blur(20);
+  user-select: none;
+  width: 100%;
+}
