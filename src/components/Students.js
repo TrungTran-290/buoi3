@@ -15,7 +15,10 @@ import {
   ListGroup,
   ListGroupItem,
 } from "reactstrap";
+import Footer from "./Footer";
 function Students() {
+  const [flag, setFlag] = useState("")
+  const [All, setAll] = useState(false)
   const [List, setList] = useState([
     {
       id: 1,
@@ -47,15 +50,45 @@ function Students() {
   const Addstudent=(name)=>{
     setList([...List,{id:List?List.length+1:1,name:name}])
   }
+  const rename=(id,name)=>{
+    setList(List.map((item)=>item.id==id? {...item,name:name}:item))
+  }
+  const setFilter=(List,flag)=>{
+    if (flag==="Checked"){
+      return List.filter(item=>item.checked)
+    }else if (flag == "UnChecked"){
+      return List.filter(item=>!item.checked)
+    }
+    else if (flag == "Uncheckall"){
+      
+    }
+    else if(flag=="del"){
+      setList(List.filter(item=>item.checked!==true))
+      setFlag("")
+    }
+    else if (flag=="Checkall"){
+      setList(List.map((item)=>({...item,checked:!All})))
+      setAll(!All)
+      setFlag("")
+    }
+    
+    return List
+  }
+// const del = (List) =>{
+//   // setList(List.map((item)=>(item.id===id?{...item,checked:!item.checked}:item)))
+//   setList(List.filter(item=>item.checked))
+// }
   return (
     <Container>
         <h1>Student List</h1>
       <Add Addstudent={Addstudent}/>
       <ListGroup>
-        {List.map((item, index) => (
-          <Student key={index} students={item} deleteById={deleteById} reChecked={reChecked} />
+        {
+        setFilter(List,flag).map((item, index) => (
+          <Student key={index} students={item} deleteById={deleteById} reChecked={reChecked} rename={rename}/>
         ))}
       </ListGroup>
+      <Footer setFlag={setFlag} />
     </Container>
   );
 }

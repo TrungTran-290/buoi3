@@ -49,5 +49,12 @@ p {
   background-color: #555555;
   backdrop-filter: blur(20);
   user-select: none;
-  width: 100%;
+  /* width: 100%; */
 }
+input[type="checkbox"]:checked {
+  background-color: red !important;
+}
+.dips input[type="checkbox"]:checked {
+  background-color: red !important;
+}
+
