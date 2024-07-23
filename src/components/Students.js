@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Add from "./Add";
 import Student from "./Student";
 import { useState } from "react";
@@ -41,19 +41,34 @@ function Students() {
       checked: false,
     },
   ]);
+  useEffect(()=>{
+    if (localStorage.getItem("list")){
+      setList(JSON.parse(localStorage.getItem("list")))
+    }
+  },[])
   const deleteById=(id)=>{
-    setList(List.filter(item=>item.id!==id))
+    let newList=(List.filter(item=>item.id!==id))
+    setList(newList)
+    localStorage.setItem("list",JSON.stringify(newList))
   }
   const reChecked=(id)=>{
-    setList(List.map((item)=>(item.id===id?{...item,checked:!item.checked}:item)))
+    let newList=(List.map((item)=>(item.id===id?{...item,checked:!item.checked}:item)))
+    setList(newList)
+    localStorage.setItem("list",JSON.stringify(newList))
   }
   const Addstudent=(name)=>{
-    setList([...List,{id:List?List.length+1:1,name:name}])
+    let newList=([...List,{id:List?List.length+1:1,name:name}])
+    setList(newList)
+    localStorage.setItem("list",JSON.stringify(newList))
   }
   const rename=(id,name)=>{
-    setList(List.map((item)=>item.id==id? {...item,name:name}:item))
+    let newList=(List.map((item)=>item.id==id? {...item,name:name}:item))
+    setList(newList)
+    localStorage.setItem("list",JSON.stringify(newList))
   }
+
   const setFilter=(List,flag)=>{
+
     if (flag==="Checked"){
       return List.filter(item=>item.checked)
     }else if (flag == "UnChecked"){
@@ -73,12 +88,8 @@ function Students() {
     }
     
     return List
-  }
-// const del = (List) =>{
-//   // setList(List.map((item)=>(item.id===id?{...item,checked:!item.checked}:item)))
-//   setList(List.filter(item=>item.checked))
-// }
-  return (
+    }
+      return (
     <Container>
         <h1>Student List</h1>
       <Add Addstudent={Addstudent}/>
