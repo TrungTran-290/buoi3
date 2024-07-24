@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Input, Table } from "reactstrap";
-
+import Swal from 'sweetalert2'
 function Students() {
   const [data, setData] = useState([]);
   const [text, setText] = useState("");
@@ -13,26 +13,49 @@ function Students() {
       setData(res.data);
     });
   };
-  const updateStudents = (id, text) => {
+  const updateStudents = (id, textEdit) => {
     axios({
       method: "put",
       url: url + "/" + id,
       data: {
-        name: text,
+        name: textEdit,
       },
     }).then(function (res) {
       setData(
-        data.map((item) => (item.id == id ? { ...item, name: res.name } : item))
+        data.map((item) => (item.id == id ? { ...item, name: textEdit } : item))
       );
     });
   };
   const deleteStudents = (id) => {
-    axios({
-      method: "delete",
-      url: url + "/" + id,
-    }).then(function () {
-      setData(data.filter((item) => item.id !== id));
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios({
+          method: "delete",
+          url: url + "/" + id,
+        }).then(function () {
+          setData(data.filter((item) => item.id !== id));
+    
+        });
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+      showConfirmButton:false,
+
+          icon: "success",
+          timer: 1000
+        });
+      }
     });
+
   };
   const addStudents = (name, checked) => {
     axios({
@@ -53,9 +76,9 @@ function Students() {
     <Table>
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Checked</th>
         </tr>
       </thead>
       <tbody>
