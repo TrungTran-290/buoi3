@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Add from "./Add";
 import Student from "./Student";
 import { useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardBody,
@@ -17,90 +18,112 @@ import {
 } from "reactstrap";
 import Footer from "./Footer";
 function Students() {
-  const [flag, setFlag] = useState("")
-  const [All, setAll] = useState(false)
+  const [flag, setFlag] = useState("");
+  const [All, setAll] = useState(false);
   const [List, setList] = useState([
-    {
-      id: 1,
-      name: "Le Meo",
-      checked: true,
-    },
-    {
-      id: 2,
-      name: "Le Tho",
-      checked: true,
-    },
-    {
-      id: 3,
-      name: "Le Nai",
-      checked: false,
-    },
-    {
-      id: 4,
-      name: "Le Ho",
-      checked: false,
-    },
+    // {
+    //   id: 1,
+    //   name: "Le Meo",
+    //   checked: true,
+    // },
+    // {
+    //   id: 2,
+    //   name: "Le Tho",
+    //   checked: true,
+    // },
+    // {
+    //   id: 3,
+    //   name: "Le Nai",
+    //   checked: false,
+    // },
+    // {
+    //   id: 4,
+    //   name: "Le Ho",
+    //   checked: false,
+    // },
   ]);
-  useEffect(()=>{
-    if (localStorage.getItem("list")){
-      setList(JSON.parse(localStorage.getItem("list")))
+  const fetchAPI = () => {
+    const url = "https://66a07b747053166bcabb8c62.mockapi.io/PracticeApi";
+    axios
+      .get(url)
+      .then(function (res) {
+        console.log(res);
+        setList(res.List);
+        console.log(List)
+      })
+      .catch();
+  };
+  useEffect(() => {
+    fetchAPI();
+  }, []);
+  {
+    List.map((item,index)=>(
+        <h1 key={index}>{item.id}, {item.name}</h1>
+    ))
+  }
+  useEffect(() => {
+    if (localStorage.getItem("list")) {
+      setList(JSON.parse(localStorage.getItem("list")));
+    } else {
+      localStorage.setItem("list", JSON.stringify(List));
     }
-    else 
-    {
-      localStorage.setItem("list",JSON.stringify(List))
-    }
-  },[])
-  const deleteById=(id)=>{
-    let newList=(List.filter(item=>item.id!==id))
-    setList(newList)
-    localStorage.setItem("list",JSON.stringify(newList))
-  }
-  const reChecked=(id)=>{
-    let newList=(List.map((item)=>(item.id===id?{...item,checked:!item.checked}:item)))
-    setList(newList)
-    localStorage.setItem("list",JSON.stringify(newList))
-  }
-  const Addstudent=(name)=>{
-    let newList=([...List,{id:List?List.length+1:1,name:name}])
-    setList(newList)
-    localStorage.setItem("list",JSON.stringify(newList))
-  }
-  const rename=(id,name)=>{
-    let newList=(List.map((item)=>item.id==id? {...item,name:name}:item))
-    setList(newList)
-    localStorage.setItem("list",JSON.stringify(newList))
-  }
+  }, []);
+  const deleteById = (id) => {
+    let newList = List.filter((item) => item.id !== id);
+    setList(newList);
+    localStorage.setItem("list", JSON.stringify(newList));
+  };
+  const reChecked = (id) => {
+    let newList = List.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
+    );
+    setList(newList);
+    localStorage.setItem("list", JSON.stringify(newList));
+  };
+  const Addstudent = (name) => {
+    let newList = [...List, { id: List ? List.length + 1 : 1, name: name }];
+    setList(newList);
+    localStorage.setItem("list", JSON.stringify(newList));
+  };
+  const rename = (id, name) => {
+    let newList = List.map((item) =>
+      item.id == id ? { ...item, name: name } : item
+    );
+    setList(newList);
+    localStorage.setItem("list", JSON.stringify(newList));
+  };
 
-  const setFilter=(List,flag)=>{
+  const setFilter = (List, flag) => {
+    if (flag === "Checked") {
+      return List.filter((item) => item.checked);
+    } else if (flag == "UnChecked") {
+      return List.filter((item) => !item.checked);
+    } else if (flag == "Uncheckall") {
+    } else if (flag == "del") {
+      setList(List.filter((item) => item.checked !== true));
+      setFlag("");
+    } else if (flag == "Checkall") {
+      setList(List.map((item) => ({ ...item, checked: !All })));
+      setAll(!All);
+      setFlag("");
+    }
 
-    if (flag==="Checked"){
-      return List.filter(item=>item.checked)
-    }else if (flag == "UnChecked"){
-      return List.filter(item=>!item.checked)
-    }
-    else if (flag == "Uncheckall"){
-      
-    }
-    else if(flag=="del"){
-      setList(List.filter(item=>item.checked!==true))
-      setFlag("")
-    }
-    else if (flag=="Checkall"){
-      setList(List.map((item)=>({...item,checked:!All})))
-      setAll(!All)
-      setFlag("")
-    }
-    
-    return List
-    }
-      return (
+    return List;
+  };
+  
+  return (
     <Container>
-        <h1>Student List</h1>
-      <Add Addstudent={Addstudent}/>
+      <h1>Student List</h1>
+      <Add Addstudent={Addstudent} />
       <ListGroup>
-        {
-        setFilter(List,flag).map((item, index) => (
-          <Student key={index} students={item} deleteById={deleteById} reChecked={reChecked} rename={rename}/>
+        {setFilter(List, flag).map((item, index) => (
+          <Student
+            key={index}
+            students={item}
+            deleteById={deleteById}
+            reChecked={reChecked}
+            rename={rename}
+          />
         ))}
       </ListGroup>
       <Footer setFlag={setFlag} />
