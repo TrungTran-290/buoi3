@@ -8,11 +8,13 @@ import "./style.css"
 import Hook7 from './Hook7';
 import API from './API';
 import Hook11 from './Hook11';
+import Students2 from './components_3/Students2';
+import Weather from './components_3/Weather';
 function App() {
   const [show,setShow]=useState(false)
   return (
     <div className='Theapp'>
-        <Students/>
+        {/* <Students2/> */}
         {/* <Footer/> */}
        
         {/* {
@@ -21,6 +23,7 @@ function App() {
         <button onClick={()=>setShow(!show)}>Stop Showing</button> */}
         {/* <API/> */}
         {/* <Hook11/> */}
+        <Weather/>
     </div>
   )
 }
